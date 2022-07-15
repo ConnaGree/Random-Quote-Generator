@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quotes Generator</title>
+
+    <!-- STYLESHEET -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- ICONSCOUT -->
+
+    <link
+      rel="stylesheet"
+      href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
+    />
+
+    <!-- BOXICONS -->
+
+    <link
+      href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="quote__card">
+      <div class="quote__container">
+        <div class="quote__symbol">
+          <i class="bx bxs-quote-alt-right"></i>
+        </div>
+        <p class="quote"></p>
+        <p class="author"></p>
+      </div>
+    </div>
+
+    <!-- <div class="wrapper">
+      <svg class="svg">
+        <circle class="circle" cx="80" cy="80" r="20"></circle>
+      </svg>
+    </div> -->
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script>
+      $(document).ready(() => {
+        const $quote = $(".quote");
+        const $author = $(".author");
+        const $imageContainer = $(".image__card");
+        let counter = 0;
+
+        const quoteTimer = () => {
+          const interval = setInterval(() => {
+            counter++;
+            if (counter == 5) {
+              clearInterval(interval);
+              counter = 0;
+              quoteGenerator();
+              quoteTimer();
+            }
+          }, 1500);
+        };
+
+        const quoteGenerator = () => {
+          fetch("https://type.fit/api/quotes")
+            .then((response) => response.json())
+            .then((data) => {
+              const quoteSet = data;
+              const randomIndex = Math.ceil(Math.random() * quoteSet.length);
+
+              let indexQuote = quoteSet[randomIndex].text;
+              let indexAuthor = quoteSet[randomIndex].author;
+
+              if (indexAuthor === null) {
+                indexAuthor = "Unknown";
+              }
+
+              $quote.text(indexQuote);
+              $author.html(`<i class="uil uil-minus"></i> ${indexAuthor}`);
+            });
+        };
+
+        quoteGenerator();
+        quoteTimer();
+      });
+    </script>
+  </body>
+</html>
